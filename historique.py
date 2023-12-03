@@ -1,18 +1,29 @@
-def historique(save_calcul):
-    autorised_char =["o", "n"]
-    continue_break = input("Voulez-vous faire un autre calcul ? (o/n): ")
-    if continue_break not in autorised_char:
-        continue_break = input("Entrée non autorisé. Voulez-vous faire un autre calcul ? (o/n): ")
-    elif continue_break == "n":
-        histo = input("Voulez-vous afficher l'historique ? (o/n): ")
-        if histo not in autorised_char:
-            histo = input("Entrée non autorisé. Voulez-vous faire un autre calcul ? (o/n): ")
-        elif histo == "o":
-            print("Calculs effectués :")
-            for calc in save_calcul:
-                print(calc)
-            supprimer = input("Voulez vous supprimer l'historique? (o/n) :")
-            if supprimer not in autorised_char:
-                supprimer = input("Entrée non autorisé. Voulez-vous faire un autre calcul ? (o/n): ")
-            elif supprimer == "o":
-                save_calcul.clear()
+import json
+import os
+
+def save(save_calcul, filename):
+    with open(filename, 'w') as json_file:
+        json.dump(save_calcul, json_file)
+        json_file.write('\n')
+        print(f"L'historique a été ajouté au fichier {filename}.")
+
+def afficher_historique(filename):
+    try:
+        with open(filename, 'r') as json_file:
+            historique_data = json.load(json_file)
+            print("Historique des calculs :")
+            for entry in historique_data:
+                print(entry)
+    except FileNotFoundError:
+        print(f"Le fichier {filename} n'existe pas.")
+    except json.JSONDecodeError:
+        print(f"Erreur lors de la lecture du fichier {filename}. Le fichier JSON est mal formé.")
+
+def supprimer_historique(filename):
+    try:
+        os.remove(filename)
+        print(f"L'historique dans le fichier {filename} a été supprimé.")
+    except FileNotFoundError:
+        print(f"Le fichier {filename} n'existe pas.")
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de la suppression de l'historique : {e}")

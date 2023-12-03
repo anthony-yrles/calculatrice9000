@@ -2,7 +2,9 @@ from entres import *
 from calcul import *
 from historique import *
 
-save_calcul = []
+autorised_char =["o", "n"]
+filename = 'historique.json'
+save_print = []
 
 while True:
     entre = entres_utilisateur()
@@ -18,8 +20,17 @@ while True:
     calcul_made = calcul(num_1_ok, operator_ok, num_2_ok)
     print(f"Le résultat est {calcul_made}")
     
-    save_print = str(num_1_ok) + " " + " " + operator_ok + " " + str(num_2_ok) + " = " + str(calcul_made) 
+    save_print = save_print + [f"Le resultat de {str(num_1_ok)} {operator_ok} {str(num_2_ok)} est {str(calcul_made)}"]
+    save(save_print, filename)
 
-    save_calcul.append(save_print)
-
-    historique(save_calcul)
+    histo = input("Voulez-vous afficher l'historique ? (o/n): ")
+    if histo not in autorised_char:
+        histo = input("Entrée non autorisé. Voulez-vous faire un autre calcul ? (o/n): ")
+    if histo == "o":
+        afficher_historique(filename)
+    del_histo = input("Voulez vous supprimer l'historique ? (o/n): ")
+    if del_histo not in autorised_char:
+        del_histo = input("Entrée non autorisé. Voulez-vous faire un autre calcul ? (o/n): ")
+    if del_histo == 'o':    
+        supprimer_historique(filename)
+        
